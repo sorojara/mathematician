@@ -77,6 +77,10 @@ public class Blocker{
                             int layOut = elementos.get(mat).layO;
                             int ET = getIET(v.getId());
 
+                            elementos.set(mat, creator(1));
+
+                            System.out.println("LayoutCounter: " + layoutCounter);
+
                             groups[layoutCounter-2].setId(v.getId());
 
                             groups[layOut].removeView(blocks[ET]);
@@ -84,7 +88,7 @@ public class Blocker{
 
 
 
-                            elementos.set(mat, creator(1));
+
 
 
                         } else if(view.getId()==2002) {
@@ -315,6 +319,10 @@ public class Blocker{
                 salida.counter = 4;
                 salida.sub = true;
 
+                ArrayList<RelativeLayout> grupos = new ArrayList<RelativeLayout>(Arrays.asList(groups));
+                grupos.add(new RelativeLayout(c));
+                grupos.add(new RelativeLayout(c));
+                groups = grupos.toArray(new RelativeLayout[lista.size()]);
 
 
                 rl1.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT));
@@ -332,8 +340,8 @@ public class Blocker{
 
 
 
-                ids=ids+4;
-                layoutCounter = layoutCounter + 2;
+                ids += 4;
+                layoutCounter += + 2;
                 break;
 
             case 2://Bloque Exponencial
