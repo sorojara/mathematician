@@ -46,6 +46,13 @@ public class Blocker{
         blocks = new EditText[1];
         groups = new RelativeLayout[1];
 
+        View.OnClickListener botonPlot = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println(getText(0));
+            }
+        };
+
         View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -71,6 +78,7 @@ public class Blocker{
                         break;
                     case DragEvent.ACTION_DROP:
                         v.setEnabled(false);
+                        System.out.println("ID: " + v.getId());
 
                         if(view.getId()==2000) {
                             int mat = getIblock(v.getId());
@@ -79,7 +87,8 @@ public class Blocker{
 
                             elementos.set(mat, creator(1));
 
-                            System.out.println("LayoutCounter: " + layoutCounter);
+                            //System.out.println("LayoutCounter: " + layoutCounter);
+                            System.out.println(groups[layoutCounter-2].getRootView());
 
                             groups[layoutCounter-2].setId(v.getId());
 
@@ -126,6 +135,8 @@ public class Blocker{
 
         help.setText("Help");
         calc.setText("Plot");
+
+        calc.setOnClickListener(botonPlot);
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.LEFT_OF, 2002);
@@ -195,6 +206,26 @@ public class Blocker{
         MatematiBlock salida = new MatematiBlock();
         ArrayList<EditText>lista;
 
+        RelativeLayout rl1= new RelativeLayout(c);
+        RelativeLayout rl2= new RelativeLayout(c);
+        rl2.setId(layoutCounter + 420);
+
+        //operacion
+        RelativeLayout.LayoutParams params3 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params3.addRule(RelativeLayout.CENTER_IN_PARENT);
+
+        //izquierda
+        RelativeLayout.LayoutParams params4 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params4.addRule(RelativeLayout.CENTER_VERTICAL);
+        params4.addRule(RelativeLayout.LEFT_OF, layoutCounter + 420);
+        params4.addRule(RelativeLayout.ALIGN_LEFT);
+        //derecha
+
+        RelativeLayout.LayoutParams params5 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params5.addRule(RelativeLayout.CENTER_VERTICAL);
+        params5.addRule(RelativeLayout.RIGHT_OF, layoutCounter + 420);
+        params5.addRule(RelativeLayout.ALIGN_RIGHT);
+
         //ARREGLAR DRAG LISTENER
         View.OnDragListener dl = new View.OnDragListener() {
             @Override
@@ -225,9 +256,7 @@ public class Blocker{
             case 1://Bloque Division
 
                 //ON DRAG DEBE ACTUALIZAR ESTO
-                RelativeLayout rl1= new RelativeLayout(c);
-                RelativeLayout rl2= new RelativeLayout(c);
-                rl2.setId(layoutCounter + 420);
+
 
                 //PARAMETROS DE LAYOUT:
                 //dividendo
@@ -238,22 +267,8 @@ public class Blocker{
                 //divisor
                 RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 params2.addRule(RelativeLayout.CENTER_HORIZONTAL);
-                params2.addRule(RelativeLayout.BELOW, ids);
-
-                //fraccion
-                RelativeLayout.LayoutParams params3 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                params3.addRule(RelativeLayout.CENTER_IN_PARENT);
-
-                //izquierda
-                RelativeLayout.LayoutParams params4 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                params4.addRule(RelativeLayout.CENTER_VERTICAL);
-                params4.addRule(RelativeLayout.LEFT_OF, layoutCounter + 420);
-                //derecha
-
-                RelativeLayout.LayoutParams params5 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                params5.addRule(RelativeLayout.CENTER_VERTICAL);
-                params5.addRule(RelativeLayout.RIGHT_OF, layoutCounter + 420);
-
+                params2.addRule(RelativeLayout.BELOW, ids+2);
+                //params2.addRule(RelativeLayout.B);
 
 
                 lista = new ArrayList<EditText>(Arrays.asList(blocks));
@@ -278,6 +293,11 @@ public class Blocker{
                 blocks[ids+2].setLayoutParams(params);
                 blocks[ids+3].setLayoutParams(params2);
 
+                blocks[ids].setHint("(   )");
+                blocks[ids+1].setHint("(   )");
+                blocks[ids+2].setHint("(   )");
+                blocks[ids+3].setHint("(   )");
+
                 rl2.setLayoutParams(params3);
 
 
@@ -288,22 +308,22 @@ public class Blocker{
                 leftBlock.setLayO(layoutCounter);
 
                 elementos.add(leftBlock);
-                counter = counter +1;
                 salida.addBlock(counter);
+                counter = counter +1;
 
                 MatematiBlock rightBlock = new MatematiBlock();
                 rightBlock.setText(ids+1);
                 rightBlock.setLayO(layoutCounter);
                 elementos.add(rightBlock);
-                counter = counter +1;
                 salida.addBlock(counter);
+                counter = counter +1;
 
                 MatematiBlock dividendo = new MatematiBlock();
                 dividendo.setText(ids+2);
                 dividendo.setLayO(layoutCounter+1);
                 elementos.add(dividendo);
-                counter = counter +1;
                 salida.addBlock(counter);
+                counter = counter +1;
 
                 //SI DEJA DE SERVIR; DESCOMENTAR ESTO:
                 // salida.addBlock(counter);
@@ -312,8 +332,8 @@ public class Blocker{
                 divisor.setText(ids+3);
                 divisor.setLayO(layoutCounter+1);
                 elementos.add(divisor);
-                counter = counter +1;
                 salida.addBlock(counter);
+                counter = counter +1;
 
                 salida.setStructure(" _0 ((_2 )/(_3 )) _1 ");
                 salida.counter = 4;
@@ -337,11 +357,8 @@ public class Blocker{
                 groups[layoutCounter].addView(blocks[ids+1]);
 
 
-
-
-
                 ids += 4;
-                layoutCounter += + 2;
+                layoutCounter += 2;
                 break;
 
             case 2://Bloque Exponencial
