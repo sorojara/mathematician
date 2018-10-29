@@ -3,6 +3,7 @@ package com.example.sorojara.mathematician;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.Context;
+import android.content.Intent;
 import android.view.DragEvent;
 import android.view.View;
 import android.widget.Button;
@@ -12,7 +13,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.graphics.Color;
 
+
 import java.util.*;
+
 
 public class Blocker{
     public ArrayList<MatematiBlock> elementos;
@@ -50,6 +53,9 @@ public class Blocker{
             @Override
             public void onClick(View v) {
                 System.out.println(getText(0));
+                Intent i = new Intent(c, Plot.class);
+                i.putExtra("key",getText(0));
+                c.startActivity(i);
             }
         };
 
@@ -88,7 +94,7 @@ public class Blocker{
                             elementos.set(mat, creator(1));
 
                             //System.out.println("LayoutCounter: " + layoutCounter);
-                            System.out.println(groups[layoutCounter-2].getRootView());
+                            //System.out.println(groups[layoutCounter-2].getRootView());
 
                             groups[layoutCounter-2].setId(v.getId());
 
@@ -96,13 +102,35 @@ public class Blocker{
                             groups[layOut].addView(groups[layoutCounter-2]);
 
 
-
-
-
-
                         } else if(view.getId()==2002) {
+                            int mat = getIblock(v.getId());
+                            int layOut = elementos.get(mat).layO;
+                            int ET = getIET(v.getId());
+
+                            elementos.set(mat, creator(2));
+
+                            //System.out.println("LayoutCounter: " + layoutCounter);
+                            //System.out.println(groups[layoutCounter-2].getRootView());
+
+                            groups[layoutCounter-2].setId(v.getId());
+
+                            groups[layOut].removeView(blocks[ET]);
+                            groups[layOut].addView(groups[layoutCounter-2]);
 
                         } else if(view.getId()==2003) {
+                            int mat = getIblock(v.getId());
+                            int layOut = elementos.get(mat).layO;
+                            int ET = getIET(v.getId());
+
+                            elementos.set(mat, creator(3));
+
+                            //System.out.println("LayoutCounter: " + layoutCounter);
+                            //System.out.println(groups[layoutCounter-2].getRootView());
+
+                            groups[layoutCounter-2].setId(v.getId());
+
+                            groups[layOut].removeView(blocks[ET]);
+                            groups[layOut].addView(groups[layoutCounter-2]);
 
                         }
 
@@ -178,15 +206,16 @@ public class Blocker{
 
 
         //Chequear ubicacion de FILL PARENT ????
-        RelativeLayout.LayoutParams params6 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams params6 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         params6.addRule(RelativeLayout.CENTER_HORIZONTAL);
         params6.addRule(RelativeLayout.BELOW, 2001);
 
-        RelativeLayout.LayoutParams params7 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
+        RelativeLayout.LayoutParams params7 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         params7.addRule(RelativeLayout.CENTER_IN_PARENT);
 
         blocks[0].setLayoutParams(params7);
         blocks[0].setOnDragListener(dragListener);
+        blocks[0].setHint("(   )");
 
         groups[0].addView(blocks[0]);
         groups[0].setLayoutParams(params6);
@@ -210,6 +239,77 @@ public class Blocker{
         RelativeLayout rl2= new RelativeLayout(c);
         rl2.setId(layoutCounter + 420);
 
+        View.OnDragListener dragListener = new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                int dragEvent=event.getAction();
+                final View view = (View) event.getLocalState();
+                switch (dragEvent) {
+                    case DragEvent.ACTION_DRAG_ENTERED:
+                        v.setBackgroundColor(Color.rgb(255, 153, 153));
+
+                        break;
+                    case DragEvent.ACTION_DRAG_EXITED:
+                        v.setBackgroundColor(Color.rgb(255, 255, 255));
+                        break;
+                    case DragEvent.ACTION_DROP:
+                        v.setEnabled(false);
+                        System.out.println("ID: " + v.getId());
+
+                        if(view.getId()==2000) {
+                            int mat = getIblock(v.getId());
+                            int layOut = elementos.get(mat).layO;
+                            int ET = getIET(v.getId());
+
+                            elementos.set(mat, creator(1));
+
+                            //System.out.println("LayoutCounter: " + layoutCounter);
+                            //System.out.println(groups[layoutCounter-2].getRootView());
+
+                            groups[layoutCounter-2].setId(v.getId());
+
+                            groups[layOut].removeView(blocks[ET]);
+                            groups[layOut].addView(groups[layoutCounter-2]);
+
+
+                        } else if(view.getId()==2002) {
+                            int mat = getIblock(v.getId());
+                            int layOut = elementos.get(mat).layO;
+                            int ET = getIET(v.getId());
+
+                            elementos.set(mat, creator(2));
+
+                            //System.out.println("LayoutCounter: " + layoutCounter);
+                            //System.out.println(groups[layoutCounter-2].getRootView());
+
+                            groups[layoutCounter-2].setId(v.getId());
+
+                            groups[layOut].removeView(blocks[ET]);
+                            groups[layOut].addView(groups[layoutCounter-2]);
+
+                        } else if(view.getId()==2003) {
+                            int mat = getIblock(v.getId());
+                            int layOut = elementos.get(mat).layO;
+                            int ET = getIET(v.getId());
+
+                            elementos.set(mat, creator(3));
+
+                            //System.out.println("LayoutCounter: " + layoutCounter);
+                            //System.out.println(groups[layoutCounter-2].getRootView());
+
+                            groups[layoutCounter-2].setId(v.getId());
+
+                            groups[layOut].removeView(blocks[ET]);
+                            groups[layOut].addView(groups[layoutCounter-2]);
+
+                        }
+
+                        break;
+                }
+                return true;
+            }
+        };
+
         //operacion
         RelativeLayout.LayoutParams params3 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         params3.addRule(RelativeLayout.CENTER_IN_PARENT);
@@ -218,25 +318,15 @@ public class Blocker{
         RelativeLayout.LayoutParams params4 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         params4.addRule(RelativeLayout.CENTER_VERTICAL);
         params4.addRule(RelativeLayout.LEFT_OF, layoutCounter + 420);
-        params4.addRule(RelativeLayout.ALIGN_LEFT);
+        //params4.addRule(RelativeLayout.ALIGN_LEFT);
+
         //derecha
 
         RelativeLayout.LayoutParams params5 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         params5.addRule(RelativeLayout.CENTER_VERTICAL);
         params5.addRule(RelativeLayout.RIGHT_OF, layoutCounter + 420);
-        params5.addRule(RelativeLayout.ALIGN_RIGHT);
+        //params5.addRule(RelativeLayout.ALIGN_RIGHT);
 
-        //ARREGLAR DRAG LISTENER
-        View.OnDragListener dl = new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                if (v instanceof EditText) {
-                    v.getId();
-
-                }
-                return  true;
-            }
-        };
 
         //counter = counter +1;
         switch(op){
@@ -283,10 +373,10 @@ public class Blocker{
                 blocks[ids+2].setId(ids+2);
                 blocks[ids+3].setId(ids+3);
 
-                blocks[ids].setOnDragListener(dl);
-                blocks[ids+1].setOnDragListener(dl);
-                blocks[ids+2].setOnDragListener(dl);
-                blocks[ids+3].setOnDragListener(dl);
+                blocks[ids].setOnDragListener(dragListener);
+                blocks[ids+1].setOnDragListener(dragListener);
+                blocks[ids+2].setOnDragListener(dragListener);
+                blocks[ids+3].setOnDragListener(dragListener);
 
                 blocks[ids].setLayoutParams(params4);
                 blocks[ids+1].setLayoutParams(params5);
@@ -342,10 +432,10 @@ public class Blocker{
                 ArrayList<RelativeLayout> grupos = new ArrayList<RelativeLayout>(Arrays.asList(groups));
                 grupos.add(new RelativeLayout(c));
                 grupos.add(new RelativeLayout(c));
-                groups = grupos.toArray(new RelativeLayout[lista.size()]);
+                groups = grupos.toArray(new RelativeLayout[grupos.size()]);
 
 
-                rl1.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT));
+                rl1.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
                 groups[layoutCounter] = rl1;
                 groups[layoutCounter+1] = rl2;
 
@@ -362,51 +452,194 @@ public class Blocker{
                 break;
 
             case 2://Bloque Exponencial
+                RelativeLayout.LayoutParams params6 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                params6.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                params6.addRule(RelativeLayout.BELOW, ids+3);
+
+
+                //divisor
+                RelativeLayout.LayoutParams params7 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                params7.addRule(RelativeLayout.RIGHT_OF, ids + 2);
+                params7.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+
+                lista = new ArrayList<EditText>(Arrays.asList(blocks));
+                lista.add(new EditText(c));
+                lista.add(new EditText(c));
+                lista.add(new EditText(c));
+                lista.add(new EditText(c));
+                blocks = lista.toArray(new EditText[lista.size()]);
+
+                blocks[ids].setId(ids);
+                blocks[ids+1].setId(ids+1);
+                blocks[ids+2].setId(ids+2);
+                blocks[ids+3].setId(ids+3);
+
+                blocks[ids].setOnDragListener(dragListener);
+                blocks[ids+1].setOnDragListener(dragListener);
+                blocks[ids+2].setOnDragListener(dragListener);
+                blocks[ids+3].setOnDragListener(dragListener);
+
+                blocks[ids].setLayoutParams(params4);
+                blocks[ids+1].setLayoutParams(params5);
+                blocks[ids+2].setLayoutParams(params6);
+                blocks[ids+3].setLayoutParams(params7);
+
+                blocks[ids].setHint("(   )");
+                blocks[ids+1].setHint("(   )");
+                blocks[ids+2].setHint("(   )");
+                blocks[ids+3].setHint("(   )");
+
+                rl2.setLayoutParams(params3);
+
                 MatematiBlock leftBlock1 = new MatematiBlock();
+                leftBlock1.setText(ids);
+                leftBlock1.setLayO(layoutCounter);
                 elementos.add(leftBlock1);
-                counter = counter +1;
                 salida.addBlock(counter);
+                counter = counter +1;
+
                 MatematiBlock rightBlock1 = new MatematiBlock();
+                rightBlock1.setText(ids+1);
+                rightBlock1.setLayO(layoutCounter);
                 elementos.add(rightBlock1);
-                counter = counter +1;
                 salida.addBlock(counter);
-                salida.sub = true;
+                counter = counter +1;
+
 
                 MatematiBlock base = new MatematiBlock();
+                base.setText(ids+2);
+                base.setLayO(layoutCounter+1);
                 elementos.add(base);
-                counter = counter +1;
                 salida.addBlock(counter);
-                MatematiBlock exponente = new MatematiBlock();
-                elementos.add(exponente);
                 counter = counter +1;
-                salida.addBlock(counter);
 
+                MatematiBlock exponente = new MatematiBlock();
+                exponente.setText(ids+3);
+                exponente.setLayO(layoutCounter+1);
+                elementos.add(exponente);
+                salida.addBlock(counter);
+                counter = counter +1;
+
+                salida.sub = true;
                 salida.setStructure(" _0 ((_2 )^(_3 )) _1 ");
                 salida.counter = 4;
+
+                ArrayList<RelativeLayout> grupos2 = new ArrayList<RelativeLayout>(Arrays.asList(groups));
+                grupos2.add(new RelativeLayout(c));
+                grupos2.add(new RelativeLayout(c));
+                groups = grupos2.toArray(new RelativeLayout[grupos2.size()]);
+
+                rl1.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+                groups[layoutCounter] = rl1;
+                groups[layoutCounter+1] = rl2;
+
+                groups[layoutCounter+1].addView(blocks[ids+2]);
+                groups[layoutCounter+1].addView(blocks[ids+3]);
+
+                groups[layoutCounter].addView(groups[layoutCounter+1]);
+                groups[layoutCounter].addView(blocks[ids+0]);
+                groups[layoutCounter].addView(blocks[ids+1]);
+
+
+                ids += 4;
+                layoutCounter += 2;
                 break;
 
             case 3://Bloque Raiz
+                RelativeLayout.LayoutParams params8 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                params8.addRule(RelativeLayout.RIGHT_OF, ids+3);
+                params8.addRule(RelativeLayout.BELOW, ids+3);
+
+                RelativeLayout.LayoutParams params9 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                params9.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                params9.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+
+
+                lista = new ArrayList<EditText>(Arrays.asList(blocks));
+                lista.add(new EditText(c));
+                lista.add(new EditText(c));
+                lista.add(new EditText(c));
+                lista.add(new EditText(c));
+                blocks = lista.toArray(new EditText[lista.size()]);
+
+                blocks[ids].setId(ids);
+                blocks[ids+1].setId(ids+1);
+                blocks[ids+2].setId(ids+2);
+                blocks[ids+3].setId(ids+3);
+
+                blocks[ids].setOnDragListener(dragListener);
+                blocks[ids+1].setOnDragListener(dragListener);
+                blocks[ids+2].setOnDragListener(dragListener);
+                blocks[ids+3].setOnDragListener(dragListener);
+
+                blocks[ids].setLayoutParams(params4);
+                blocks[ids+1].setLayoutParams(params5);
+                blocks[ids+2].setLayoutParams(params8);
+                blocks[ids+3].setLayoutParams(params9);
+
+                blocks[ids].setHint("(   )");
+                blocks[ids+1].setHint("(   )");
+                blocks[ids+2].setHint("(   )");
+                blocks[ids+3].setHint("(   )");
+
+                rl2.setLayoutParams(params3);
+
+
+
                 MatematiBlock leftBlock2 = new MatematiBlock();
+                leftBlock2.setText(ids);
+                leftBlock2.setLayO(layoutCounter);
                 elementos.add(leftBlock2);
-                counter = counter +1;
                 salida.addBlock(counter);
+                counter = counter +1;
+
                 MatematiBlock rightBlock2 = new MatematiBlock();
+                rightBlock2.setText(ids+1);
+                rightBlock2.setLayO(layoutCounter);
                 elementos.add(rightBlock2);
-                counter = counter +1;
                 salida.addBlock(counter);
-                salida.sub = true;
+                counter = counter +1;
+
 
                 MatematiBlock base2 = new MatematiBlock();
+                base2.setText(ids+2);
+                base2.setLayO(layoutCounter+1);
                 elementos.add(base2);
-                counter = counter +1;
                 salida.addBlock(counter);
-                MatematiBlock exponente2 = new MatematiBlock();
-                elementos.add(exponente2);
                 counter = counter +1;
-                salida.addBlock(counter);
 
-                salida.setStructure(" _0 ((_2 )^(1/(_3 )) _1 ");
+                MatematiBlock exponente2 = new MatematiBlock();
+                exponente2.setText(ids+3);
+                exponente2.setLayO(layoutCounter+1);
+                elementos.add(exponente2);
+                salida.addBlock(counter);
+                counter = counter +1;
+
+                salida.setStructure(" _0 ((_2 )^((1)/(_3 ))) _1 ");
                 salida.counter = 4;
+                salida.sub = true;
+
+
+
+                ArrayList<RelativeLayout> grupos3 = new ArrayList<RelativeLayout>(Arrays.asList(groups));
+                grupos3.add(new RelativeLayout(c));
+                grupos3.add(new RelativeLayout(c));
+                groups = grupos3.toArray(new RelativeLayout[grupos3.size()]);
+
+                rl1.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+                groups[layoutCounter] = rl1;
+                groups[layoutCounter+1] = rl2;
+
+                groups[layoutCounter+1].addView(blocks[ids+2]);
+                groups[layoutCounter+1].addView(blocks[ids+3]);
+
+                groups[layoutCounter].addView(groups[layoutCounter+1]);
+                groups[layoutCounter].addView(blocks[ids+0]);
+                groups[layoutCounter].addView(blocks[ids+1]);
+
+
+                ids += 4;
+                layoutCounter += 2;
                 break;
         }
 
